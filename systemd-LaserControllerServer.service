@@ -1,0 +1,22 @@
+# Copy this file to /etc/systemd/system/LaserControllerServer.service and then
+#     sudo systemctl start LaserControllerServer.service
+# and to start on boot:
+#     sudo systemctl enable LaserControllerServer.service
+# To consult the log : sudo journalctl -u LaserControllerServer
+
+[Unit]
+Description=Launch the laser controller server
+
+[Service]
+ExecStart=/home/pi/laser-controller-server/start.sh
+WorkingDirectory=/home/pi/laser-controller-server
+User=pi
+Group=daemon
+Nice=10
+SyslogIdentifier=LaserControllerServer
+StandardOutput=syslog
+Restart=on-failure
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
