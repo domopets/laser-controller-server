@@ -6,8 +6,6 @@ const a = require("awaiting")
 
 const internalIp = require("os").networkInterfaces().wlan0[0].address
 
-console.log(internalIp)
-
 const port = 8890
 const ad = mdns.createAdvertisement(mdns.tcp("http"), port, {
   name: "DOMOPETS_LaserController",
@@ -20,27 +18,27 @@ const laserServoPath = path.join(__dirname, "..", "laser-servo")
 const moveHorizontal = path.join(laserServoPath, "move-horizontal")
 const moveVertical = path.join(laserServoPath, "move-vertical")
 
-async function moveRight() {
-  await execa(moveHorizontal + " 60")
+async function moveRight(angle) {
+    await execa(moveHorizontal, [angle.toString()])
 }
 
-async function moveLeft() {
-  await execa(moveHorizontal + " -60")
+async function moveLeft(angle) {
+    await execa(moveHorizontal, [angle.toString()])
 }
 
-async function moveUp() {
-  await execa(moveVertical + " 60")
+async function moveUp(angle) {
+    await execa(moveVertical, [angle.toString()])
 }
 
-async function moveDown() {
-  await execa(moveVertical + " -60")
+async function moveDown(angle) {
+    await execa(moveVertical, [angle.toString()])
 }
 
 io.on("connection", socket => {
-  socket.on("moveRight", () => moveRight())
-  socket.on("moveLeft", () => moveLeft())
-  socket.on("moveUp", () => moveUp())
-  socket.on("moveDown", () => moveDown())
+  socket.on("moveRight", (angle) => moveRight(angle))
+  socket.on("moveLeft", (angle) => moveLeft(angle))
+  socket.on("moveUp", (angle) => moveUp(angle))
+  socket.on("moveDown", (angle) => moveDown(angle))
 })
 
 io.listen(port)
