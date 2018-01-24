@@ -15,34 +15,17 @@ const ad = mdns.createAdvertisement(mdns.tcp("http"), port, {
 })
 
 const laserServoPath = path.join(__dirname, "..", "laser-servo")
+const laserSoundPath = path.join(__dirname, "..", "laser-sound")
+
 const on = path.join(laserServoPath, "on")
 const off = path.join(laserServoPath, "off")
+
+const soundOn = path.join(laserSoundPath, "sound-start")
+const soundOff = path.join(laserSoundPath, "sound-end")
+
 const moveHorizontal = path.join(laserServoPath, "move-horizontal")
 const moveVertical = path.join(laserServoPath, "move-vertical")
 
-<<<<<<< Updated upstream
-async function moveRight(angle) {
-    await execa(moveHorizontal, [angle.toString()])
-}
-
-async function moveLeft(angle) {
-    await execa(moveHorizontal, [angle.toString()])
-}
-
-async function moveUp(angle) {
-    await execa(moveVertical, [angle.toString()])
-}
-
-async function moveDown(angle) {
-    await execa(moveVertical, [angle.toString()])
-}
-
-io.on("connection", socket => {
-  socket.on("moveRight", (angle) => moveRight(angle))
-  socket.on("moveLeft", (angle) => moveLeft(angle))
-  socket.on("moveUp", (angle) => moveUp(angle))
-  socket.on("moveDown", (angle) => moveDown(angle))
-=======
 async function moveRight() {
   await execa(moveHorizontal, 60)
 }
@@ -67,6 +50,14 @@ async function laserOff() {
   await execa(off)
 }
 
+async function sound-start() {
+  await execa(start)
+}
+
+async function sound-end() {
+  await execa(end)
+}
+
 io.on("connection", socket => {
   socket.on("moveRight", () => moveRight())
   socket.on("moveLeft", () => moveLeft())
@@ -74,7 +65,8 @@ io.on("connection", socket => {
   socket.on("moveDown", () => moveDown())
   socket.on("laserOn", () => laserOn())
   socket.on("laserOff", () => laserOff())
->>>>>>> Stashed changes
+  socket.on("sound-start", () => sound-start())
+  socket.on("sound-end", () => sound-end())
 })
 
 io.listen(port)
